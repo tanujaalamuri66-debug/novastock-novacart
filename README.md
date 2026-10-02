@@ -1,7 +1,7 @@
 # novastock-novacart
 # NovaStock: NOVA CART Business Rescue
 
-Live demo: PASTE-YOUR-LINK-HERE
+Live demo:https://yourusername.github.io/novacart-novastock/
 Demo video: PASTE-YOUR-VIDEO-LINK-HERE
 
 ## Problem diagnosis

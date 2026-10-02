@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NovaStock: NOVA CART Business Rescue</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap">
+<style>
+:root{--bg:#f2f5f3;--card:#fff;--ink:#14231f;--mut:#5b6b66;--line:#d9e2de;--pri:#0f5c52;--on:#fff;--acc:#e0a100;--bad:#b3261e;--ok:#1b7a3d;--mid:#a86a00;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1815;--card:#16241f;--ink:#e8f0ed;--mut:#9bb0a9;--line:#2a3d36;--pri:#4fc3b0;--on:#06231e;--acc:#f0b429;--bad:#ff8a80;--ok:#6fd48f;--mid:#f0b429}}
+:root[data-theme="dark"]{--bg:#0e1815;--card:#16241f;--ink:#e8f0ed;--mut:#9bb0a9;--line:#2a3d36;--pri:#4fc3b0;--on:#06231e;--acc:#f0b429;--bad:#ff8a80;--ok:#6fd48f;--mid:#f0b429}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "Bricolage Grotesque",system-ui,sans-serif}
+main{max-width:760px;margin:0 auto;padding:14px}
+h1{font-size:26px;line-height:1.15;margin:6px 0 4px;font-weight:800}h2{font-size:19px;margin:18px 0 8px}h3{font-size:16px;margin:0 0 4px}
+p{margin:4px 0 8px}.mut{color:var(--mut);font-size:13px}
+nav{display:flex;gap:6px;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);padding:8px 0;z-index:5;overflow-x:auto}
+nav button{flex:1;white-space:nowrap;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:9px 12px;border-radius:999px;font:inherit;font-weight:600}
+nav button.on{background:var(--pri);color:var(--on);border-color:var(--pri)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;margin:8px 0}
+.scroll{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:13px}td,th{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+.bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden}.bar i{display:block;height:100%;background:var(--pri)}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line)}.row:last-child{border:0}
+.row>div:first-child{flex:1;min-width:0}
+button.b{border:0;background:var(--pri);color:var(--on);padding:8px 12px;border-radius:8px;font:inherit;font-weight:600}
+button.g{border:1px solid var(--line);background:transparent;color:var(--ink);padding:8px 12px;border-radius:8px;font:inherit}
+button.big{width:100%;padding:12px;margin-top:6px}
+.tag{font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;border:1px solid currentColor}
+.hi{color:var(--ok)}.md{color:var(--mid)}.lo{color:var(--bad)}
+.big-n{font-size:28px;font-weight:800;color:var(--pri)}
+input[type=range]{width:100%;accent-color:var(--pri)}select{font:inherit;padding:8px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);width:100%}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.grid .card{margin:0}
+.q{border-left:3px solid var(--acc);padding-left:10px;margin:8px 0}
+</style></head><body><main>
+<h1>NovaStock: make “in stock” a promise NOVA CART can keep</h1>
+<p class="mut">Business rescue brief: diagnosis, working prototype and impact model in one page.</p>
+<nav id="nav"></nav><div id="v"></div></main>
+<script>
+const $=s=>document.querySelector(s);
+const tabs=[["d","Diagnosis"],["c","Customer"],["s","Store"],["i","Impact"]];
+let tab="d";
+const I=[ // id,name,store,sku,price,hoursSinceUpdate,velocity,truth
+[1,"Toor dal 1kg","Sharma Kirana","dal",168,2,2,1],[2,"Atta 5kg","Sharma Kirana","atta",245,30,3,0],[3,"Paracetamol strip","Meera Pharmacy","para",32,20,2,1],
+[4,"ORS sachets","Meera Pharmacy","ors",24,44,2,0],[5,"Wheat bread","Annapurna Bakery","bread",55,6,3,1],[6,"Jowar rusk","Annapurna Bakery","rusk",90,26,1,0],
+[7,"Geometry box","Gupta Stationers","geo",120,52,1,1],[8,"A4 paper ream","Gupta Stationers","a4",310,70,2,0],[9,"Millet cookies","Lakshmi Mart","cook",140,10,1,1],
+[10,"Groundnut oil 1L","Lakshmi Mart","oil",380,40,2,1],[11,"Curd 500g","Sharma Kirana","curd",38,18,3,0],[12,"Cotton gauze","Meera Pharmacy","gauze",45,3,1,1],
+[13,"Atta 5kg","Lakshmi Mart","atta",262,5,3,1],[14,"ORS sachets","Lakshmi Mart","ors",28,12,2,1],[15,"A4 paper ream","Lakshmi Mart","a4",325,9,2,1],[16,"Curd 500g","Lakshmi Mart","curd",40,4,3,1]
+].map(a=>({id:a[0],n:a[1],st:a[2],sku:a[3],p:a[4],h:a[5],v:a[6],truth:!!a[7],out:false}));
+const conf=i=>i.out?0:Math.round(100*Math.exp(-i.h*i.v/48));
+const lab=i=>i.out?["Out","lo"]:conf(i)>=75?["Likely in stock","hi"]:conf(i)>=60?["Probably","md"]:["Needs check","lo"];
+let cart=[],holds=[],placed=false;
+const get=id=>I.find(x=>x.id==id);
+function nav(){ $("#nav").innerHTML=tabs.map(t=>`<button class="${t[0]==tab?"on":""}" onclick="go('${t[0]}')">${t[1]}</button>`).join("")}
+function go(t){tab=t;render()}
+function render(){nav();$("#v").innerHTML={d:D,c:C,s:S,i:M}[tab]()}
+const B=(l,a,b,c)=>`<div class="row"><div>${l}</div><div style="flex:2"><div class="bar"><i style="width:${c}%"></i></div></div><div class="mut" style="min-width:90px;text-align:right">${a}${b?" → "+b:""}</div></div>`;
+function D(){return `
+<div class="card" style="border-color:var(--pri);border-width:2px"><h3>Final answer: what should NOVA CART build, and why?</h3>
+<p><b>Build NovaStock, an inventory-confidence layer for stores and the customer app, before spending more on marketing.</b></p>
+<p><b>Proof from the case:</b> 53% of cancellations are stock-outs or store rejections; 28% of tickets are missing or wrong items, and refund status adds another 29%; 39% of stores find catalogue upkeep too heavy; customers who reach three orders reorder at 72%, yet only 31% place a second order. Failed orders block the path to order three.</p>
+<p><b>Proof from the build:</b> the Customer and Store tabs run the fix end to end (score, store check, swap). The Impact tab shows about ₹4.7L a month gain on a ₹22L build, inside the ₹25L cap, with assumptions you can change.</p>
+<p><b>Why not the others:</b> more acquisition fills a leaking bucket, faster delivery cannot fix an item that does not exist, and the local-store range only wins if “available” is true.</p></div>
+<div class="card"><h3>The diagnosis</h3><p><b>NOVA CART is growing by spending, not by being trusted.</b> The app shows items as available that stores often do not have. That breaks the order, triggers refunds and tickets, and customers quietly leave before their third order, when retention locks in (72%).</p>
+<div class="grid"><div><div class="big-n">53%</div><div class="mut">of cancellations are stock-outs or store rejections (about 2,245 orders a month)</div></div><div><div class="big-n">65%</div><div class="mut">promo spend as share of revenue, up from 44%</div></div></div></div>
+<h2>What the numbers say</h2><div class="card scroll"><table><tr><th>Metric</th><th>6 mo ago</th><th>Now</th><th>Change</th></tr>
+<tr><td>Registered users</td><td>82,000</td><td>1,20,000</td><td>+46%</td></tr><tr><td>Monthly active</td><td>39,000</td><td>46,000</td><td>+18%</td></tr>
+<tr><td>Orders</td><td>31,200</td><td>38,500</td><td>+23%</td></tr><tr><td>Revenue</td><td>₹21.8L</td><td>₹26.1L</td><td>+20%</td></tr>
+<tr><td>Promo spend</td><td>₹9.5L</td><td>₹17L</td><td class="lo">+79%</td></tr><tr><td>Promo per order</td><td>₹30</td><td>₹44</td><td class="lo">+45%</td></tr>
+<tr><td>Repeat rate</td><td>41%</td><td>27%</td><td class="lo">-14 pts</td></tr><tr><td>Cancellations</td><td>6%</td><td>11%</td><td class="lo">+5 pts</td></tr>
+<tr><td>Support tickets</td><td>3,100</td><td>5,900</td><td class="lo">+90%</td></tr></table></div>
+<div class="card"><h3>Where cancellations come from</h3>${B("Product unavailable","35%","",35)}${B("Delay, customer cancels","27%","",27)}${B("Store rejected","18%","",18)}${B("No delivery partner","12%","",12)}</div>
+<div class="card"><h3>The retention cliff</h3>${B("Place first order","54%","",54)}${B("Second order in 30 days","31%","",31)}${B("After 3 orders, order again","72%","",72)}<p class="mut">Goal: get more first-time buyers to order three times. Failed orders are the biggest block on that path.</p></div>
+<h2>Why this problem, not the others</h2>
+<div class="card"><p><b>Stars hide the churn.</b> 61% of lapsed customers had rated 4★ or higher, so they left after one bad moment, not out of general dislike. Satisfaction scores will not warn you.</p>
+<p><b>The chain.</b> Stale stock (39% of stores say upkeep is too much work; some update every 1–3 days) → “available” items that are not → 35% + 18% of cancellations → refund status (29% of tickets), missing items (19%), wrong substitutes (9%) → 18% of stores (about 112) may leave.</p>
+<p><b>The edge.</b> 19% of customers search for items nearby stores lack, and cross-category buyers repeat more. Local long-tail range can beat big apps only if the promise is reliable.</p>
+<p><b>Marketing’s +30%</b> would add ₹5.1L a month (₹30.6L over six months), more than the ₹25L total build budget, on top of 44% of coupons never redeemed.</p>
+<p class="mut">Data check: orders × AOV is ₹18.7L, but revenue is ₹26.1L, so revenue likely includes fees. Confirm the definition before finalising targets.</p></div>
+<h2>Priority call</h2><div class="card"><div class="row"><div><b>1. Inventory trust</b><br><span class="mut">Fixes Partner, Operations and Finance concerns at the root.</span></div><span class="tag hi">Build now</span></div>
+<div class="row"><div><b>2. Reach order three</b><br><span class="mut">Retention starts only after reliable first orders.</span></div><span class="tag md">Next</span></div>
+<div class="row"><div><b>3. Pause the +30% marketing</b><br><span class="mut">Reduce first-order discounts; reward third orders.</span></div><span class="tag md">Decide</span></div></div>
+<h2>Prompt journey</h2>
+<div class="q"><b>“Find contradictions between growth metrics and quality metrics.”</b><br><span class="mut">Showed promo growing 79% against 23% order growth.</span></div>
+<div class="q"><b>“Trace each cancellation reason back to a store or system cause.”</b><br><span class="mut">Linked 53% of cancellations to inventory freshness.</span></div>
+<div class="q"><b>“Why would 61% of churners have rated 4★+? What does that rule out?”</b><br><span class="mut">Ruled out dissatisfaction surveys as an early-warning signal.</span></div>
+<div class="q"><b>“Argue against my chosen problem as the Finance Head.”</b><br><span class="mut">Forced the impact model and ₹25L cost cap on the Impact tab.</span></div>
+<div class="card"><h3>What NovaStock does</h3><p>1) Scores every item’s chance of being in stock from update age and sales speed. 2) Asks the store to confirm risky items before the customer is charged. 3) Offers a swap from a more reliable store when an item is out. 4) Gives stores a ten-second sweep list, riskiest items first. Try it in the Customer and Store tabs.</p></div>`}
+function C(){
+const catalog=I.filter(i=>!i.out).map(i=>{const [t,c]=lab(i);return `<div class="row"><div><b>${i.n}</b> <span class="mut">₹${i.p} · ${i.st}</span><br><span class="tag ${c}">${t} ${conf(i)}%</span></div><button class="g" onclick="add(${i.id})">Add</button></div>`}).join("");
+const tot=cart.reduce((s,id)=>s+get(id).p,0);
+let status="";
+if(placed){status=`<div class="card"><h3>Order status</h3>`+cart.map(id=>{const i=get(id),h=holds.find(x=>x.id==id);
+let s=!h?`<span class="hi">Confirmed, high confidence</span>`:h.s=="p"?`<span class="md">Waiting for ${i.st} to confirm</span>`:h.s=="ok"?`<span class="hi">Store confirmed</span>`:`<span class="lo">Out of stock</span> ${alt(i)}`;
+return `<div class="row"><div><b>${i.n}</b><br><span class="mut">${i.st}</span></div><div style="text-align:right">${s}</div></div>`}).join("")+
+`<p class="mut">You are charged only after every item is confirmed or swapped.</p><button class="g big" onclick="sim()">Demo: let stores answer now</button></div>`}
+return `<div class="card"><h3>Customer view</h3><p class="mut">Add items. Anything under 60% confidence is checked with the store before you pay.</p>${catalog}</div>
+<div class="card"><h3>Your basket (${cart.length}) · ₹${tot}</h3>${cart.map(id=>`<div class="row"><div>${get(id).n} <span class="mut">${get(id).st}</span></div><button class="g" onclick="rm(${id})">Remove</button></div>`).join("")||'<p class="mut">Basket is empty. Add the Atta, ORS or A4 paper to see a store check.</p>'}
+<button class="b big" onclick="place()" ${cart.length?"":"disabled"}>Place order</button></div>${status}`}
+function alt(i){const a=I.filter(x=>x.sku==i.sku&&x.id!=i.id&&!x.out).sort((a,b)=>conf(b)-conf(a))[0];return a?`<br><button class="b" onclick="swap(${i.id},${a.id})">Swap to ${a.st}, ₹${a.p} (${conf(a)}%)</button>`:`<br><span class="mut">No nearby alternative. Item removed.</span>`}
+function add(id){if(!cart.includes(id))cart.push(id);placed=false;holds=[];render()}
+function rm(id){cart=cart.filter(x=>x!=id);placed=false;holds=[];render()}
+function place(){placed=true;holds=cart.filter(id=>conf(get(id))<60).map(id=>({id,s:"p"}));render()}
+function swap(o,n){cart=cart.map(x=>x==o?n:x);holds=holds.filter(h=>h.id!=o);const i=get(n);if(conf(i)<60)holds.push({id:n,s:"p"});render()}
+function ans(id,ok){const i=get(id),h=holds.find(x=>x.id==id);i.h=0;i.out=!ok;i.truth=ok;if(h)h.s=ok?"ok":"out";render()}
+function sim(){holds.filter(h=>h.s=="p").forEach(h=>{const i=get(h.id);i.h=0;i.out=!i.truth;h.s=i.truth?"ok":"out"});render()}
+let store="Sharma Kirana";
+function S(){const names=[...new Set(I.map(i=>i.st))];const its=I.filter(i=>i.st==store).sort((a,b)=>conf(a)-conf(b));
+const avg=Math.round(its.reduce((s,i)=>s+conf(i),0)/its.length);
+const pend=holds.filter(h=>h.s=="p"&&get(h.id).st==store);
+return `<div class="card"><h3>Store dashboard</h3><select onchange="store=this.value;render()">${names.map(n=>`<option ${n==store?"selected":""}>${n}</option>`).join("")}</select>
+<p>Freshness score <span class="big-n">${avg}%</span></p><div class="bar"><i style="width:${avg}%"></i></div></div>
+${pend.length?`<div class="card" style="border-color:var(--acc)"><h3>Customer waiting: ${pend.length} item${pend.length>1?"s":""}</h3>${pend.map(h=>`<div class="row"><div><b>${get(h.id).n}</b></div><div><button class="b" onclick="ans(${h.id},true)">Have it</button> <button class="g" onclick="ans(${h.id},false)">Out</button></div></div>`).join("")}</div>`:`<p class="mut">No customers waiting. Place an order with risky items in the Customer tab.</p>`}
+<div class="card"><h3>Ten-second sweep, riskiest first</h3><p class="mut">Tap one button per item. Fresh answers raise customer confidence and cut cancellations.</p>
+${its.map(i=>{const [t,c]=lab(i);return `<div class="row"><div><b>${i.n}</b><br><span class="tag ${c}">${t} ${conf(i)}%</span> <span class="mut">${i.out?"marked out":i.h+"h since update"}</span></div><div><button class="g" onclick="ans(${i.id},true)">In stock</button> <button class="g" onclick="ans(${i.id},false)">Out</button></div></div>`}).join("")}</div>`}
+let P={r:50,l:3,m:25,t:60};
+function M(){const inv=38500*.11*.53,rec=inv*P.r/100,rep=46000*P.l/100,rpo=26.1e5/38500,orders=rec+rep,val=orders*rpo*P.m/100,tk=5900*.28*P.r/100*P.t,mo=val+tk,cost=22e5;
+const L=n=>"₹"+(n/1e5).toFixed(2)+"L",N=n=>Math.round(n).toLocaleString("en-IN");
+const sl=(k,l,mn,mx,u)=>`<div class="card"><div class="row" style="border:0;padding:0"><b>${l}</b><span>${P[k]}${u}</span></div><input type="range" min="${mn}" max="${mx}" value="${P[k]}" oninput="P['${k}']=+this.value;M2()"></div>`;
+return `<div class="card"><h3>Prove the value</h3><p class="mut">Inputs come from the case. Assumptions are the sliders: change them and the result updates.</p></div>
+${sl("r","Cut stock-out and rejection cancellations",10,80,"%")}${sl("l","Lift in repeat rate (points)",0,8," pts")}${sl("m","Contribution margin on revenue (assumed)",10,40,"%")}${sl("t","Cost per support ticket (assumed)",20,150," ₹")}
+<div id="out">${O(inv,rec,rep,orders,val,tk,mo,cost,N,L)}</div>`}
+function O(inv,rec,rep,orders,val,tk,mo,cost,N,L){return `<div class="card"><div class="grid"><div><div class="big-n">${N(orders)}</div><div class="mut">more completed orders a month (${N(rec)} saved, ${N(rep)} repeat)</div></div><div><div class="big-n">${L(mo)}</div><div class="mut">monthly gain (${L(val)} orders + ${L(tk)} support)</div></div></div>
+<p>Build cost <b>₹22L</b> with ₹3L reserve, inside the ₹25L cap. Break-even in about <b>${mo>0?(cost/mo).toFixed(1):"–"} months</b> of run-rate. Six-month value after launch: <b>${L(mo*6)}</b>.</p></div>
+<div class="card"><h3>Spend plan</h3><div class="scroll"><table><tr><td>Inventory confidence engine and store quick-sweep</td><td>₹8L</td></tr><tr><td>Customer app: confidence labels, pre-pay store check, swaps</td><td>₹5L</td></tr><tr><td>Store onboarding and small incentives</td><td>₹5L</td></tr><tr><td>Unified order, refund and support view</td><td>₹4L</td></tr><tr><td>Reserve</td><td>₹3L</td></tr></table></div></div>
+<div class="card"><h3>Guardrails and metrics</h3><p>Hold the +30% marketing increase (avoids ₹5.1L a month). Track cancellation rate (11% → under 7%), second order in 30 days (31%), tickets per 100 orders (15.3 now), stores at risk of leaving (18%).</p></div>`}
+function M2(){const inv=38500*.11*.53,rec=inv*P.r/100,rep=46000*P.l/100,rpo=26.1e5/38500,orders=rec+rep,val=orders*rpo*P.m/100,tk=5900*.28*P.r/100*P.t,mo=val+tk;
+const L=n=>"₹"+(n/1e5).toFixed(2)+"L",N=n=>Math.round(n).toLocaleString("en-IN");
+$("#out").innerHTML=O(inv,rec,rep,orders,val,tk,mo,22e5,N,L);document.querySelectorAll("input[type=range]").forEach((e,k)=>{e.parentElement.querySelector("span").textContent=P[["r","l","m","t"][k]]+["%"," pts","%"," ₹"][k]})}
+render();
+</script></body></html>

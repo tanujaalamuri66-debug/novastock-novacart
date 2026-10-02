@@ -1,1 +1,40 @@
 # novastock-novacart
+# NovaStock: NOVA CART Business Rescue
+
+Live demo: PASTE-YOUR-LINK-HERE
+Demo video: PASTE-YOUR-VIDEO-LINK-HERE
+
+## Problem diagnosis
+NOVA CART is growing by spending, not by earning trust. Promo spend rose 79% while orders rose 23%, and repeat purchase fell from 41% to 27%.
+
+The root cause is that the app shows items as available that stores often do not have:
+- 53% of cancellations are stock-outs or store rejections (about 2,245 orders a month).
+- Missing or wrong items make up 28% of support tickets, and refund status adds another 29%.
+- 39% of partner stores say keeping the catalogue updated takes too much effort, and 18% may leave.
+- 61% of lapsed customers had rated 4 stars or higher, so ratings do not warn of churn.
+- Customers who reach 3 orders reorder at 72%, but only 31% place a second order. Failed orders block the path.
+- Management's proposed +30% marketing would cost about Rs 30.6L over six months, more than the Rs 25L budget.
+
+## Solution: NovaStock
+An inventory-confidence layer for partner stores and the customer app.
+1. Each item gets an in-stock confidence score from update age and sales speed.
+2. Risky items are checked with the store before the customer pays.
+3. If an item is out, the app suggests a swap from a more reliable store.
+4. Stores get a ten-second sweep list, riskiest items first.
+
+Users: customers placing orders, and store owners keeping stock accurate.
+
+## Prompt journey
+- "Find contradictions between growth metrics and quality metrics."
+- "Trace each cancellation reason back to a store or system cause."
+- "Why would 61% of churners have rated 4 stars or higher? What does that rule out?"
+- "Argue against my chosen problem as the Finance Head."
+
+## Business impact
+At default assumptions (50% fewer stock-out cancellations, +3 points repeat rate, 25% contribution margin, Rs 60 per ticket), the gain is about Rs 4.7L a month on a Rs 22L build, inside the Rs 25L cap, with break-even in about 4.7 months. Margin and ticket cost are assumptions and can be changed in the app.
+
+## Data notes
+The prototype uses sample data. Revenue (Rs 26.1L) is higher than orders x AOV (Rs 18.7L), so the revenue definition should be confirmed.
+
+## How to run
+Open `index.html` in any browser.
